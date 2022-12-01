@@ -1,0 +1,7 @@
+package com.kodlamaio.inventoryServer.business.concretes;
+
+import com.kodlamaio.inventoryServer.business.abstracts.ModelService;
+
+public class ModelManager  implements ModelService{
+
+}

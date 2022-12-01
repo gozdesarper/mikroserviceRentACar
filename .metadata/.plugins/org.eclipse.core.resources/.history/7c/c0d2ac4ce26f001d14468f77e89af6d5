@@ -1,0 +1,23 @@
+package com.kodlamaio.inventoryServer.business.concretes;
+
+import java.util.List;
+
+import com.kodlamaio.inventoryServer.business.abstracts.CarService;
+import com.kodlamaio.inventoryServer.business.request.create.CreatCarRequest;
+import com.kodlamaio.inventoryServer.business.responses.create.CreateCarResponse;
+import com.kodlamaio.inventoryServer.business.responses.get.GetAllCarsResponse;
+
+public class CarManager implements CarService{
+
+	@Override
+	public List<GetAllCarsResponse> getAll() {
+		return null;
+	}
+
+	@Override
+	public CreateCarResponse add(CreatCarRequest creatcarRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

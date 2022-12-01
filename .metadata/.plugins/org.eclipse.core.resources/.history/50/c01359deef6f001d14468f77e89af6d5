@@ -1,0 +1,75 @@
+package com.kodlamaio.inventoryServer.business.concretes;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.kodlamaio.common.utilities.exceptions.BusinessException;
+import com.kodlamaio.common.utilities.mapping.ModelMapperService;
+import com.kodlamaio.inventoryServer.business.abstracts.CarService;
+import com.kodlamaio.inventoryServer.business.request.create.CreatCarRequest;
+import com.kodlamaio.inventoryServer.business.request.update.UpdateCarRequest;
+import com.kodlamaio.inventoryServer.business.responses.create.CreateCarResponse;
+import com.kodlamaio.inventoryServer.business.responses.get.GetAllCarsResponse;
+import com.kodlamaio.inventoryServer.business.responses.update.UpdateCarResponse;
+import com.kodlamaio.inventoryServer.dataAccess.CarRepository;
+import com.kodlamaio.inventoryServer.entities.Car;
+
+import lombok.AllArgsConstructor;
+@Service
+@AllArgsConstructor
+public class CarManager implements CarService{
+	private CarRepository carRepository;
+	private ModelMapperService modelMapperService;
+
+	@Override
+	public List<GetAllCarsResponse> getAll() {
+		List<Car> cars = this.carRepository.findAll();
+		List<GetAllCarsResponse> responses = 
+			cars.stream().map(brand -> 
+			this.modelMapperService.forResponse().map(brand, GetAllCarsResponse.class))
+			.collect(Collectors.toList());
+	
+		return responses;
+	}
+
+	@Override
+	public CreateCarResponse add(CreatCarRequest creatcarRequest) {
+		Car car = this.modelMapperService.forRequest().map(creatcarRequest, Car.class);
+		car.setId(UUID.randomUUID().toString());
+		this.carRepository.save(car);
+		CreateCarResponse createCarResponse = this.modelMapperService.forResponse().map(car, CreateCarResponse.class);
+		return createCarResponse;
+	
+	}
+
+	@Override
+	public UpdateCarResponse update(UpdateCarRequest updateCarRequest) {
+		checkIfExistCarId(updateCarRequest.getId());
+		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
+		 car.setId(updateCarRequest.get
+		this.carRepository.save(car);
+		UpdateCarResponse updateCarResponse = this.modelMapperService.forResponse().map(car, UpdateCarResponse.class);
+		return updateCarResponse;
+	}
+
+	@Override
+	public void delete(String id) {
+		this.carRepository.deleteById(id);
+	
+	}
+	private void checkIfExistCarId (String id) {
+		if(!carRepository.existsById(id)) {
+			throw new BusinessException("User not found");
+		}
+	}
+
+	@Override
+	public void delete(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

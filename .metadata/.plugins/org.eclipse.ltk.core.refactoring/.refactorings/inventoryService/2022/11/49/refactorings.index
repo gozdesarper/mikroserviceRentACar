@@ -1,0 +1,13 @@
+1669642846782	Rename package 'com.kodlamaio.discoveryServer'
+1669718097356	Move type 'CarRepository' to new file
+1669718103086	Move type 'ModelRepository' to new file
+1669718321628	Move type 'ModelManager' to new file
+1669718328005	Move type 'BrandManager' to new file
+1669718810228	Rename package 'com.kodlamaio.inventoryServer.business.response'
+1669718886465	Move compilation unit
+1669718889293	Move compilation unit
+1669718893103	Move compilation unit
+1669720184022	Delete element
+1669726304570	Rename type 'CreatBrandRequest'
+1669737163630	Move type 'BrandController' to new file
+1669737168664	Move type 'ModelController' to new file

@@ -1,0 +1,12 @@
+package com.kodlamaio.inventoryServer.business.abstracts;
+
+import java.util.List;
+
+import com.kodlamaio.inventoryServer.business.request.create.CreatBrandRequest;
+import com.kodlamaio.inventoryServer.business.responses.create.CreateBrandResponse;
+import com.kodlamaio.inventoryServer.business.responses.get.GetAllBrandsResponse;
+
+public interface CarService  {
+	List<GetAllBrandsResponse> getAll();
+	CreateBrandResponse add(CreatBrandRequest creatBrandRequest);
+}

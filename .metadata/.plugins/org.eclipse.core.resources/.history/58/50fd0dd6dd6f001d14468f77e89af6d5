@@ -1,0 +1,33 @@
+package com.kodlamaio.inventoryServer.business.concretes;
+
+import java.util.List;
+
+import com.kodlamaio.common.utilities.mapping.ModelMapperService;
+import com.kodlamaio.inventoryServer.business.abstracts.ModelService;
+import com.kodlamaio.inventoryServer.business.request.create.CreatModelRequest;
+import com.kodlamaio.inventoryServer.business.responses.create.CreateModelResponse;
+import com.kodlamaio.inventoryServer.business.responses.get.GetAllModelResponse;
+import com.kodlamaio.inventoryServer.dataAccess.ModelRepository;
+import com.kodlamaio.inventoryServer.entities.Brand;
+import com.kodlamaio.inventoryServer.entities.Model;
+
+public class ModelManager  implements ModelService{
+	
+	private ModelRepository modelRepository;
+	private ModelMapperService modelMapperService;
+	
+
+	@Override
+	public List<GetAllModelResponse> getAll() {
+	List<Model> models = this.modelRepository.findAll();
+	List<GetAllModelResponse> responses = models.stream().map(model - > this.)
+		return null;
+	}
+
+	@Override
+	public CreateModelResponse add(CreatModelRequest creatModelRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

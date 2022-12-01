@@ -1,0 +1,13 @@
+package com.kodlamaio.inventoryServer.business.abstracts;
+
+import java.util.List;
+
+import com.kodlamaio.inventoryServer.business.request.create.CreatCarRequest;
+import com.kodlamaio.inventoryServer.business.responses.create.CreateCarResponse;
+import com.kodlamaio.inventoryServer.business.responses.get.GetAllCarsResponse;
+
+public interface ModelService {
+	List<GetAllCarsResponse> getAll();
+	CreateCarResponse add(CreatCarRequest creatcarRequest);
+
+}
