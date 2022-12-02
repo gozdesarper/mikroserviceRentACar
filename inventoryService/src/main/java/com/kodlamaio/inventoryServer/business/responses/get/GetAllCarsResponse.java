@@ -14,5 +14,6 @@ public class GetAllCarsResponse {
 	private int modelYear;
 	private String plate;
 	private String modelName;
+	private int state;
 
 }

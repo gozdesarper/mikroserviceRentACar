@@ -11,6 +11,7 @@ import com.kodlamaio.common.utilities.mapping.ModelMapperService;
 import com.kodlamaio.inventoryServer.business.abstracts.CarService;
 import com.kodlamaio.inventoryServer.business.request.create.CreatCarRequest;
 import com.kodlamaio.inventoryServer.business.request.update.UpdateCarRequest;
+import com.kodlamaio.inventoryServer.business.responses.GetCarResponse;
 import com.kodlamaio.inventoryServer.business.responses.create.CreateCarResponse;
 import com.kodlamaio.inventoryServer.business.responses.get.GetAllCarsResponse;
 import com.kodlamaio.inventoryServer.business.responses.update.UpdateCarResponse;
@@ -18,32 +19,32 @@ import com.kodlamaio.inventoryServer.dataAccess.CarRepository;
 import com.kodlamaio.inventoryServer.entities.Car;
 
 import lombok.AllArgsConstructor;
+
 @Service
 @AllArgsConstructor
-public class CarManager implements CarService{
+public class CarManager implements CarService {
 	private CarRepository carRepository;
 	private ModelMapperService modelMapperService;
 
 	@Override
 	public List<GetAllCarsResponse> getAll() {
 		List<Car> cars = this.carRepository.findAll();
-		List<GetAllCarsResponse> responses = 
-			cars.stream().map(brand -> 
-			this.modelMapperService.forResponse().map(brand, GetAllCarsResponse.class))
-			.collect(Collectors.toList());
-	
+		List<GetAllCarsResponse> responses = cars.stream()
+				.map(brand -> this.modelMapperService.forResponse().map(brand, GetAllCarsResponse.class))
+				.collect(Collectors.toList());
 		return responses;
 	}
 
 	@Override
-	public CreateCarResponse add(CreatCarRequest creatcarRequest) {
+	public CreateCarResponse add(CreatCarRequest creatcarRequest) {		
 		checkIfExistCarPlate(creatcarRequest.getPlate());
 		Car car = this.modelMapperService.forRequest().map(creatcarRequest, Car.class);
 		car.setId(UUID.randomUUID().toString());
 		Car result = this.carRepository.save(car);
-		CreateCarResponse createCarResponse = this.modelMapperService.forResponse().map(result, CreateCarResponse.class);
+		CreateCarResponse createCarResponse = this.modelMapperService.forResponse().map(result,
+				CreateCarResponse.class);
 		return createCarResponse;
-	
+
 	}
 
 	@Override
@@ -62,15 +63,34 @@ public class CarManager implements CarService{
 		this.carRepository.deleteById(id);
 
 	}
+
 	private void checkIfExistCarId(String id) {
-		if(!carRepository.existsById(id)) {
+		if (!carRepository.existsById(id)) {
 			throw new BusinessException("User not found");
 		}
 	}
+
 	private void checkIfExistCarPlate(String plate) {
 		Car car = carRepository.findByPlate(plate);
-		if(car!=null) {
+		if (car != null) {
 			throw new BusinessException("Car Plate Exist");
 		}
 	}
+
+	@Override
+	public void updateCarState(String carId, int state) { // kıralan carId nini state durumunu güncellliyoruz.
+		Car car = this.carRepository.findById(carId).get(); // optional durumda bu ıd null da dönebilir dönmeyedebilir.
+		car.setState(state);
+		carRepository.save(car);
+	}
+	
+	@Override
+	public void checkIfByCarId(String carId) {
+		Car car = this.carRepository.findById(carId).get();
+		if (car.getState() != 1) {
+			throw new BusinessException("carId not avalibale");
+		}
+
+	}
+
 }
