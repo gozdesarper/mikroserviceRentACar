@@ -8,6 +8,7 @@
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="&#x09;@Override"/>
 			<item value="port"/>
 		</list>
 		<list key="replacehistory">

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kodlamaio.inventoryServer.business.abstracts.CarService;
 import com.kodlamaio.inventoryServer.business.request.create.CreatCarRequest;
 import com.kodlamaio.inventoryServer.business.request.update.UpdateCarRequest;
-import com.kodlamaio.inventoryServer.business.responses.GetCarResponse;
 import com.kodlamaio.inventoryServer.business.responses.create.CreateCarResponse;
 import com.kodlamaio.inventoryServer.business.responses.get.GetAllCarsResponse;
 import com.kodlamaio.inventoryServer.business.responses.update.UpdateCarResponse;
@@ -46,6 +45,6 @@ public class CarController {
 	}
 	@GetMapping("/{carId}")
 	public void checkIfByCarId(@PathVariable String carId) {
-		 carService.checkIfByCarId(carId);
+		 carService.checkIfCarAvailable(carId);
 	}
 }

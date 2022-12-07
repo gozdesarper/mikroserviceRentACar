@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.kodlamaio.common.events.filter.BrandUpdatedEvent;
 import com.kodlamaio.common.utilities.exceptions.BusinessException;
 import com.kodlamaio.common.utilities.mapping.ModelMapperService;
 import com.kodlamaio.inventoryServer.business.abstracts.BrandService;
@@ -17,6 +18,7 @@ import com.kodlamaio.inventoryServer.business.responses.get.GetAllBrandsResponse
 import com.kodlamaio.inventoryServer.business.responses.update.UpdateBrandResponse;
 import com.kodlamaio.inventoryServer.dataAccess.BrandRepository;
 import com.kodlamaio.inventoryServer.entities.Brand;
+import com.kodlamaio.inventoryServer.kafka.InventoryProducer;
 
 import lombok.AllArgsConstructor;
 @Service
@@ -24,6 +26,8 @@ import lombok.AllArgsConstructor;
 public class BrandManager  implements BrandService{
 	private BrandRepository brandRepository;
 	private ModelMapperService modelMapperService;
+	private InventoryProducer inventoryProducer;
+	
 
 	@Override
 	public List<GetAllBrandsResponse> getAll() {
@@ -53,6 +57,12 @@ public class BrandManager  implements BrandService{
 		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		brand.setId(updateBrandRequest.getId());
 		Brand result=	this.brandRepository.save(brand);
+		
+		BrandUpdatedEvent brandUpdatedEvent = this.modelMapperService.forRequest().map(result, BrandUpdatedEvent.class);
+		brandUpdatedEvent.setBrandId(result.getId());
+		brandUpdatedEvent.setBrandName(result.getName());
+		brandUpdatedEvent.setMessage("Brand Updated");
+		this.inventoryProducer.sendMessage(brandUpdatedEvent);
 		UpdateBrandResponse response = this.modelMapperService.forResponse().map(result, UpdateBrandResponse.class);
 		return response;
 	}
