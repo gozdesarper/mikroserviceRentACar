@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModelUpdatedEvent {
+public class ModelDeletedEvent {
 	
 	private String message;
 	private String brandId;

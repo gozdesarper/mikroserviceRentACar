@@ -1,6 +1,8 @@
 package com.kodlamaio.paymentService.business.concretes;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import com.kodlamaio.paymentService.business.abstracts.PaymentService;
 import com.kodlamaio.paymentService.business.request.CreatePaymentRequest;
 import com.kodlamaio.paymentService.business.request.RentalPaymentRequest;
 import com.kodlamaio.paymentService.business.response.CreatePaymentResponse;
+import com.kodlamaio.paymentService.business.response.GetAllPaymentResponse;
 import com.kodlamaio.paymentService.dataAccess.PaymentRepository;
 import com.kodlamaio.paymentService.entities.Payment;
 
@@ -54,11 +57,24 @@ public class PaymentManager implements PaymentService{
 		}
 		
 	}
-	private void checkIfCardNo(String cardNo) {
-	Payment payment = paymentRepository.findByCardNo(cardNo);
-	if (payment!=null) {
-		throw new BusinessException("card No exist");
-	}
-	}
+			private void checkIfCardNo(String cardNo) {
+			Payment payment = paymentRepository.findByCardNo(cardNo);
+			if (payment!=null) {
+				throw new BusinessException("card No exist");
+			}
+			}
+		
+			@Override
+			public List<GetAllPaymentResponse> getAll() {
+				List<Payment> payments = this.paymentRepository.findAll();
+				List<GetAllPaymentResponse> responses = payments.stream().map(payment -> this.modelMapperService
+						.forResponse().map(payment, GetAllPaymentResponse.class)).collect(Collectors.toList());
+				return responses;
+			}
+		
+			@Override
+			public void delete(String id) {
+				this.paymentRepository.deleteAll();
+			}
 
 }

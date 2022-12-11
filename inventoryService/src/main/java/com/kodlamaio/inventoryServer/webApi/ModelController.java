@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kodlamaio.common.result.DataResult;
+import com.kodlamaio.common.result.Result;
 import com.kodlamaio.inventoryServer.business.abstracts.ModelService;
 import com.kodlamaio.inventoryServer.business.request.create.CreatModelRequest;
 import com.kodlamaio.inventoryServer.business.request.update.UpdateModelRequest;
@@ -29,20 +31,20 @@ public class ModelController {
 	private  ModelService modelService;
 	
 	@GetMapping("/getall")
-	List<GetAllModelResponse> getAll(){
+	DataResult<List<GetAllModelResponse>> getAll(){
 		return modelService.getAll();
 	}
 	@PostMapping("")
-	CreateModelResponse add(@Valid @RequestBody CreatModelRequest creatModelRequest) {
+	DataResult<CreateModelResponse> add(@Valid @RequestBody CreatModelRequest creatModelRequest) {
 		return modelService.add(creatModelRequest);
 		
 	}
 	@PutMapping("")
-	UpdateModelResponse update(@Valid @RequestBody UpdateModelRequest updateModelRequest) {
+	DataResult<UpdateModelResponse> update(@Valid @RequestBody UpdateModelRequest updateModelRequest) {
 		return modelService.update(updateModelRequest);
 	}
 	@DeleteMapping("{id}")
-	void delete(@PathVariable String id) {
-		modelService.delete(id);
+	Result delete(@PathVariable String id) {
+		return modelService.delete(id);
 	}
 	}

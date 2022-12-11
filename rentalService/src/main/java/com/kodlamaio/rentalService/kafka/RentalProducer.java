@@ -51,7 +51,7 @@ public class RentalProducer {
 		
 		Message<PaymentReceivedEvent> message = MessageBuilder
 				.withPayload(paymentReceivedEvent)
-				.setHeader(KafkaHeaders.TOPIC, topic.name()).build();		
+				.setHeader(KafkaHeaders.TOPIC, "payment-received").build();		
 		kafkaTemplate.send(message);  //kafka ile mesajı produce ediyoruz.
 	}
 }

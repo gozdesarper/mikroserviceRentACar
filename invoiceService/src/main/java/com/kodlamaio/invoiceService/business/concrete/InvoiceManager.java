@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.kodlamaio.common.events.invoice.PaymentReceivedEvent;
 import com.kodlamaio.common.utilities.mapping.ModelMapperService;
 import com.kodlamaio.invoiceService.business.abstracts.InvoiceService;
-import com.kodlamaio.invoiceService.business.request.CreateInvoiceRequest;
 import com.kodlamaio.invoiceService.business.request.UpdateInvoiceRequest;
 import com.kodlamaio.invoiceService.business.response.CreateInvoiceResponse;
 import com.kodlamaio.invoiceService.business.response.GetAllInvoiceResponse;
@@ -19,35 +19,27 @@ import com.kodlamaio.invoiceService.entity.Invoice;
 import lombok.AllArgsConstructor;
 
 @Service
-
-
 @AllArgsConstructor
 public class InvoiceManager implements InvoiceService {
 	private InvoiceRepository invoiceRepository;
 	private ModelMapperService modelMapperService;
 	
 	@Override
-	public CreateInvoiceResponse add(CreateInvoiceRequest createInvoiceRequest) {
-		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
+	public CreateInvoiceResponse add(PaymentReceivedEvent paymentReceivedEvent) {
+		Invoice invoice = this.modelMapperService.forRequest().map(paymentReceivedEvent, Invoice.class);
 		invoice.setId(UUID.randomUUID().toString());
 		invoiceRepository.save(invoice);
 		CreateInvoiceResponse createInvoiceResponse = this.modelMapperService.forResponse().map(invoice,CreateInvoiceResponse.class);
 		return createInvoiceResponse;
 	}
-
 	@Override
 	public UpdateInvoiceResponse update(UpdateInvoiceRequest updateInvoiceRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		Invoice invoice = this.modelMapperService.forRequest().map(updateInvoiceRequest, Invoice.class);
+		invoice.setId(UUID.randomUUID().toString());
+		invoiceRepository.save(invoice);
+		UpdateInvoiceResponse updateInvoiceResponse  = this.modelMapperService.forResponse().map(invoice,UpdateInvoiceResponse.class);
+		return updateInvoiceResponse;
 	}
-
-	@Override
-	public void createInvoice(Invoice invoice) {
-		 invoice.setId(UUID.randomUUID().toString());
-		 invoiceRepository.save(invoice);
-		
-	}
-
 	@Override
 	public GetAllInvoiceResponse getall() {
 		List<Invoice> invoices = this.invoiceRepository.findAll();
@@ -56,5 +48,12 @@ public class InvoiceManager implements InvoiceService {
 				.collect(Collectors.toList());
 		return (GetAllInvoiceResponse) getAllInvoiceResponses;
 	}
+
+	@Override
+	public void delete(String id) {
+		this.invoiceRepository.deleteAll();
+		
+	}
+	
 
 }

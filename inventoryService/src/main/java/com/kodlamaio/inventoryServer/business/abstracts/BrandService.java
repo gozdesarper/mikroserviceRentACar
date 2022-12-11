@@ -2,6 +2,8 @@ package com.kodlamaio.inventoryServer.business.abstracts;
 
 import java.util.List;
 
+import com.kodlamaio.common.result.DataResult;
+import com.kodlamaio.common.result.Result;
 import com.kodlamaio.inventoryServer.business.request.create.CreateBrandRequest;
 import com.kodlamaio.inventoryServer.business.request.update.UpdateBrandRequest;
 import com.kodlamaio.inventoryServer.business.responses.create.CreateBrandResponse;
@@ -10,9 +12,10 @@ import com.kodlamaio.inventoryServer.business.responses.update.UpdateBrandRespon
 
 public interface BrandService {
 	
-	List<GetAllBrandsResponse> getAll();
-	CreateBrandResponse add(CreateBrandRequest creatBrandRequest);
-	UpdateBrandResponse update(UpdateBrandRequest updateBrandRequest);
-	void delete(String id);
+	DataResult<List<GetAllBrandsResponse>> getAll();
+	DataResult<CreateBrandResponse> add(CreateBrandRequest creatBrandRequest);
+	DataResult<UpdateBrandResponse> update(UpdateBrandRequest updateBrandRequest);
+	Result delete(String id);
+	Result getBrandName(String brandId);
 
 }

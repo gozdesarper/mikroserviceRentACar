@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kodlamaio.common.result.DataResult;
+import com.kodlamaio.common.result.Result;
 import com.kodlamaio.inventoryServer.business.abstracts.BrandService;
 import com.kodlamaio.inventoryServer.business.request.create.CreateBrandRequest;
 import com.kodlamaio.inventoryServer.business.request.update.UpdateBrandRequest;
@@ -28,21 +30,21 @@ public class BrandController {
 	private BrandService brandService;
 	
 	@GetMapping("/getall")
-	List<GetAllBrandsResponse> getAll(){
+	DataResult<List<GetAllBrandsResponse>> getAll(){
 		 return this.brandService.getAll();
 	}
 	@PostMapping()
-	CreateBrandResponse add(@Valid @RequestBody CreateBrandRequest creatBrandRequest) {
+	DataResult<CreateBrandResponse> add(@Valid @RequestBody CreateBrandRequest creatBrandRequest) {
 		return brandService.add(creatBrandRequest);
 		
 	}
 	@PutMapping()
-	UpdateBrandResponse update(@Valid @RequestBody UpdateBrandRequest updateBrandRequest) {
+	DataResult<UpdateBrandResponse> update(@Valid @RequestBody UpdateBrandRequest updateBrandRequest) {
 		return brandService.update(updateBrandRequest);
 	}
 	@DeleteMapping("/{id}")
-	void delete(@PathVariable String id) {
-		brandService.delete(id);
+	Result delete(@PathVariable String id) {
+		return brandService.delete(id);
 	}
 
 }

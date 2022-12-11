@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kodlamaio.common.request.RentalInventoryResponse;
+import com.kodlamaio.common.result.DataResult;
+import com.kodlamaio.common.result.Result;
 import com.kodlamaio.inventoryServer.business.abstracts.CarService;
 import com.kodlamaio.inventoryServer.business.request.create.CreatCarRequest;
 import com.kodlamaio.inventoryServer.business.request.update.UpdateCarRequest;
@@ -28,23 +31,27 @@ public class CarController {
 	private CarService carService;
 	private 
 	@GetMapping()
-	List<GetAllCarsResponse> getAll(){
+	DataResult<List<GetAllCarsResponse>> getAll(){
 		return this.carService.getAll();
 	}
 	@PostMapping()
-	CreateCarResponse add(@Valid @RequestBody CreatCarRequest creatcarRequest) {
+	DataResult<CreateCarResponse> add(@Valid @RequestBody CreatCarRequest creatcarRequest) {
 		return carService.add(creatcarRequest);
 	}
 	@PutMapping()
-	UpdateCarResponse update(@Valid @RequestBody UpdateCarRequest updateCarRequest) {
+	DataResult<UpdateCarResponse> update(@Valid @RequestBody UpdateCarRequest updateCarRequest) {
 		return carService.update(updateCarRequest);
 	}
 	@DeleteMapping("{id}")
-	void delete(@PathVariable String id) {
-		carService.delete(id);
+	Result delete(@PathVariable String id) {
+		return carService.delete(id);
 	}
 	@GetMapping("/{carId}")
 	public void checkIfByCarId(@PathVariable String carId) {
 		 carService.checkIfCarAvailable(carId);
+	}
+	@GetMapping("/get-car-response/{carId}")
+	RentalInventoryResponse getCarResponse(@PathVariable String carId) {
+		return carService.getCarResponse(carId);
 	}
 }

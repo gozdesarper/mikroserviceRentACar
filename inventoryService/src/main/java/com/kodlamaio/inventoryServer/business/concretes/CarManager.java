@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 import com.kodlamaio.common.events.filter.CarCreatedEvent;
 import com.kodlamaio.common.events.filter.CarDeletedEvent;
 import com.kodlamaio.common.events.filter.CarUpdatedEvent;
+import com.kodlamaio.common.request.RentalInventoryResponse;
+import com.kodlamaio.common.result.DataResult;
+import com.kodlamaio.common.result.Result;
+import com.kodlamaio.common.result.SuccessDataResult;
+import com.kodlamaio.common.result.SuccessResult;
 import com.kodlamaio.common.utilities.exceptions.BusinessException;
 import com.kodlamaio.common.utilities.mapping.ModelMapperService;
 import com.kodlamaio.inventoryServer.business.abstracts.CarService;
@@ -31,16 +36,16 @@ public class CarManager implements CarService {
 	private InventoryProducer inventoryProducer;
 
 	@Override
-	public List<GetAllCarsResponse> getAll() {
+	public DataResult<List<GetAllCarsResponse>> getAll() {
 		List<Car> cars = this.carRepository.findAll();
 		List<GetAllCarsResponse> responses = cars.stream()
 				.map(brand -> this.modelMapperService.forResponse().map(brand, GetAllCarsResponse.class))
 				.collect(Collectors.toList());
-		return responses;
+		return new SuccessDataResult<List<GetAllCarsResponse>>(responses,"Cars Listed");
 	}
 	
 	@Override
-	public CreateCarResponse add(CreatCarRequest creatcarRequest) {		
+	public DataResult<CreateCarResponse> add(CreatCarRequest creatcarRequest) {		
 		checkIfExistCarPlate(creatcarRequest.getPlate());
 		Car car = this.modelMapperService.forRequest().map(creatcarRequest, Car.class);
 		car.setId(UUID.randomUUID().toString());
@@ -52,17 +57,17 @@ public class CarManager implements CarService {
 		carCreatedEvent.setCarId(result.getId());
 		carCreatedEvent.setModelId(result.getModel().getId());
 		carCreatedEvent.setModelName(result.getModel().getId());
+		carCreatedEvent.setModelYear(result.getModelYear());
 		carCreatedEvent.setMessage("Car Created");
-		
 		this.inventoryProducer.sendMessage(carCreatedEvent);
-		
 		CreateCarResponse createCarResponse = this.modelMapperService.forResponse().map(result,CreateCarResponse.class);
-		return createCarResponse;
+		return new SuccessDataResult<CreateCarResponse>(createCarResponse,"Car Created");
+		
 
 	}
 
 	@Override
-	public UpdateCarResponse update(UpdateCarRequest updateCarRequest) {
+	public DataResult<UpdateCarResponse> update(UpdateCarRequest updateCarRequest) {
 		checkIfExistCarId(updateCarRequest.getId());
 		checkIfExistCarPlate(updateCarRequest.getPlate());
 		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
@@ -77,11 +82,11 @@ public class CarManager implements CarService {
 		
 		this.inventoryProducer.sendMessage(carUpdatedEvent);
 		UpdateCarResponse updateCarResponse = this.modelMapperService.forResponse().map(car, UpdateCarResponse.class);
-		return updateCarResponse;
+		return new SuccessDataResult<UpdateCarResponse>(updateCarResponse,"Car Updated");
 	}
 
 	@Override
-	public void delete(String id) {
+	public Result delete(String id) {
 		checkIfExistCarId(id);
 		this.carRepository.deleteById(id);
 		
@@ -89,7 +94,7 @@ public class CarManager implements CarService {
 		carDeletedEvent.setCarId(id);
 		carDeletedEvent.setMessage("car deleted");
 		this.inventoryProducer.sendMessage(carDeletedEvent);
-
+		return new SuccessResult("Car Deleted");
 	}
 
 	private void checkIfExistCarId(String id) {
@@ -119,6 +124,23 @@ public class CarManager implements CarService {
 			throw new BusinessException("carId not avalibale");
 		}
 
+	}
+
+	@Override
+	public void getModelYear(String modelId) {
+		Car car = this.carRepository.findById(modelId).get();
+		car.getModelYear();
+		
+	}
+
+	@Override
+	public RentalInventoryResponse getCarResponse(String carId) {
+		Car car = this.carRepository.findCarById(carId);
+		RentalInventoryResponse inventoryResponse = new RentalInventoryResponse();
+		inventoryResponse.setBrandName(car.getModel().getBrand().getName());
+		inventoryResponse.setModelName(car.getModel().getName());
+		inventoryResponse.setModelYear(car.getModelYear());
+		return inventoryResponse;
 	}
 
 }

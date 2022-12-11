@@ -2,10 +2,14 @@ package com.kodlamaio.filterService.business.abstracs;
 
 import java.util.List;
 
+import com.kodlamaio.common.events.filter.BrandCreatedEvent;
+import com.kodlamaio.common.events.filter.BrandDeletedEvent;
 import com.kodlamaio.common.events.filter.BrandUpdatedEvent;
 import com.kodlamaio.common.events.filter.CarCreatedEvent;
 import com.kodlamaio.common.events.filter.CarDeletedEvent;
 import com.kodlamaio.common.events.filter.CarUpdatedEvent;
+import com.kodlamaio.common.events.filter.ModelCreatedEvent;
+import com.kodlamaio.common.events.filter.ModelDeletedEvent;
 import com.kodlamaio.common.events.filter.ModelUpdatedEvent;
 import com.kodlamaio.filterService.business.response.GetAllFiltersResponse;
 import com.kodlamaio.filterService.business.response.GetFiltersResponse;
@@ -23,7 +27,11 @@ public interface FilterService {
 	void deleteCar(CarDeletedEvent carDeletedEvent);
 	void updateCar(CarUpdatedEvent carUpdatedEvent);
 	
+	void addBrand(BrandCreatedEvent brandCreatedEvent);
 	void updateBrand(BrandUpdatedEvent brandUpdatedEvent);
+	void deleteBrand(BrandDeletedEvent brandDeletedEvent);
+	
+	void addModel(ModelCreatedEvent modelCreatedEvent);
 	void updateModel(ModelUpdatedEvent modelUpdatedEvent);
-
+	void deleteModel(ModelDeletedEvent modelDeletedEvent);
 }

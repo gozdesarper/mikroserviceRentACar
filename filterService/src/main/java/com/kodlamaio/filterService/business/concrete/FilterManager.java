@@ -6,10 +6,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.kodlamaio.common.events.filter.BrandCreatedEvent;
+import com.kodlamaio.common.events.filter.BrandDeletedEvent;
 import com.kodlamaio.common.events.filter.BrandUpdatedEvent;
 import com.kodlamaio.common.events.filter.CarCreatedEvent;
 import com.kodlamaio.common.events.filter.CarDeletedEvent;
 import com.kodlamaio.common.events.filter.CarUpdatedEvent;
+import com.kodlamaio.common.events.filter.ModelCreatedEvent;
+import com.kodlamaio.common.events.filter.ModelDeletedEvent;
 import com.kodlamaio.common.events.filter.ModelUpdatedEvent;
 import com.kodlamaio.common.utilities.mapping.ModelMapperService;
 import com.kodlamaio.filterService.business.abstracs.FilterService;
@@ -24,6 +28,7 @@ import lombok.AllArgsConstructor;
 public class FilterManager implements FilterService{
 	private FilterRepository filterRepository;
 	private ModelMapperService modelMapperService;
+
 
 	@Override
 	public List<GetAllFiltersResponse> getAll() {
@@ -91,7 +96,7 @@ public class FilterManager implements FilterService{
 
 	@Override
 	public void addCar(CarCreatedEvent carCreatedEvent) {
-	Filter filter = this.modelMapperService.forRequest().map(carCreatedEvent, Filter.class);
+	Filter filter = this.modelMapperService.forRequest().map(carCreatedEvent, Filter.class);	
 		this.filterRepository.save(filter);
 	}
 
@@ -119,6 +124,28 @@ public class FilterManager implements FilterService{
 		Filter filter = this.modelMapperService.forRequest().map(modelUpdatedEvent, Filter.class);
 		this.filterRepository.save(filter);
 		
+	}
+
+	@Override
+	public void addBrand(BrandCreatedEvent brandCreatedEvent) {
+		Filter filter = this.modelMapperService.forRequest().map(brandCreatedEvent, Filter.class);	
+		this.filterRepository.save(filter);
+	}
+
+	@Override
+	public void deleteBrand(BrandDeletedEvent brandDeletedEvent) {
+		this.filterRepository.deleteAll();
+	}
+
+	@Override
+	public void addModel(ModelCreatedEvent modelCreatedEvent) {
+		Filter filter = this.modelMapperService.forRequest().map(modelCreatedEvent, Filter.class);	
+		this.filterRepository.save(filter);
+	}
+
+	@Override
+	public void deleteModel(ModelDeletedEvent modelDeletedEvent) {
+		this.filterRepository.deleteAll();
 	}
 
 }

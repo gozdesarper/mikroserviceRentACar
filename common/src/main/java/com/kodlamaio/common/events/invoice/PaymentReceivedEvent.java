@@ -10,8 +10,17 @@ import lombok.NoArgsConstructor;
 
 public class PaymentReceivedEvent {
 	
+	
 	private String cardHolder;
 	private double totalPrice;
+	private String carId;
+	private int  rentedForDays;
+	private double dailyPrice;
+	private String modelName;
+	private String brandName;
+	private int modelYear;
 	
+	
+
 
 }

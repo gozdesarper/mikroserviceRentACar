@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.kodlamaio.common.events.filter.ModelUpdatedEvent;
+import com.kodlamaio.common.result.DataResult;
+import com.kodlamaio.common.result.Result;
+import com.kodlamaio.common.result.SuccessDataResult;
+import com.kodlamaio.common.result.SuccessResult;
 import com.kodlamaio.common.utilities.exceptions.BusinessException;
 import com.kodlamaio.common.utilities.mapping.ModelMapperService;
 import com.kodlamaio.inventoryServer.business.abstracts.ModelService;
@@ -30,28 +34,28 @@ public class ModelManager implements ModelService {
 	private InventoryProducer inventoryProducer;
 
 	@Override
-	public List<GetAllModelResponse> getAll() {
+	public DataResult<List<GetAllModelResponse>> getAll() {
 		List<Model> models = this.modelRepository.findAll();
 		List<GetAllModelResponse> responses = models.stream()
 				.map(model -> this.modelMapperService.forResponse().map(model, GetAllModelResponse.class))
 				.collect(Collectors.toList());
-		return responses;
+		return new SuccessDataResult<List<GetAllModelResponse>>(responses,"Model Listed");
 	}
 
 	@Override
-	public CreateModelResponse add(CreatModelRequest creatModelRequest) {
+	public DataResult<CreateModelResponse> add(CreatModelRequest creatModelRequest) {
 		checkIfExistByName(creatModelRequest.getName());
 		Model model = this.modelMapperService.forRequest().map(creatModelRequest, Model.class);
 		model.setId(UUID.randomUUID().toString());
 		Model result = this.modelRepository.save(model);
 		CreateModelResponse createModelResponse = this.modelMapperService.forResponse().map(result,
 				CreateModelResponse.class);
-		return createModelResponse;
+		return new SuccessDataResult<CreateModelResponse>(createModelResponse,"model added");
 		
 	}
 	
 	@Override
-	public UpdateModelResponse update(UpdateModelRequest updateModelRequest) {
+	public DataResult<UpdateModelResponse> update(UpdateModelRequest updateModelRequest) {
 		checkIfExistByName(updateModelRequest.getName());
 		checkIfExistCarId(updateModelRequest.getId());
 		Model model = this.modelMapperService.forRequest().map(updateModelRequest, Model.class);
@@ -65,13 +69,14 @@ public class ModelManager implements ModelService {
 		
 		UpdateModelResponse createModelResponse = this.modelMapperService.forResponse().map(result,
 				UpdateModelResponse.class);
-		return createModelResponse;
+		return new SuccessDataResult<UpdateModelResponse>(createModelResponse,"Model Updated");
 	}
 
 	@Override
-	public void delete(String id) {
+	public Result delete(String id) {
 		checkIfExistCarId(id);
 		this.modelRepository.deleteById(id);
+		return new SuccessResult("Car Deleted");
 	}
 	
 	private void checkIfExistCarId (String id) {
@@ -85,4 +90,12 @@ public class ModelManager implements ModelService {
 		throw new BusinessException("model name exist");
 	}
 }
+
+	@Override
+	public void getModelName(String modelId) {
+	Model model = this.modelRepository.findById(modelId).get();
+	model.getName();
+		
+	}
+
 }

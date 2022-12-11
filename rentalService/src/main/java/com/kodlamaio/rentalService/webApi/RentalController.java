@@ -1,7 +1,11 @@
 package com.kodlamaio.rentalService.webApi;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +18,7 @@ import com.kodlamaio.rentalService.business.dto.request.CreatePaymentRequest;
 import com.kodlamaio.rentalService.business.dto.request.CreateRentalRequest;
 import com.kodlamaio.rentalService.business.dto.request.UpdateRentalRequest;
 import com.kodlamaio.rentalService.business.dto.response.CreateRentalResponse;
+import com.kodlamaio.rentalService.business.dto.response.GetAllRentalResponse;
 import com.kodlamaio.rentalService.business.dto.response.UpdateRentalResponse;
 
 import lombok.AllArgsConstructor;
@@ -27,11 +32,18 @@ public class RentalController {
 	CreateRentalResponse add(@Valid @RequestBody CreateRentalRequest createRentalRequest,@RequestParam String cardNo,@RequestParam String cardHolder,@RequestParam String cvv,@RequestParam String cardDate) {
 		CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest(cardNo,cardHolder,cvv,cardDate);
 		return this.rentalService.add(createRentalRequest,createPaymentRequest);
-
 	}
 	@PutMapping()
 	UpdateRentalResponse update(@Valid @RequestBody UpdateRentalRequest updateRentalRequest) {
 	 return	this.rentalService.update(updateRentalRequest);
 	}
+	@DeleteMapping()
+	void delete(String id) {
+		this.rentalService.delete(id);
+	}
+	@GetMapping()
+	List<GetAllRentalResponse> getAll(){
+	return this.rentalService.getAll();
 	}
 
+}

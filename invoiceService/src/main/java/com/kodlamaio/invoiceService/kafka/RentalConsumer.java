@@ -23,14 +23,10 @@ public class RentalConsumer {
 	}
 
 	@KafkaListener(
-			topics = "${spring.kafka.topic.name}", 
-			groupId = "invoice"
+			topics = "payment-received", 
+			groupId = "invoice2"
 			)
 	public void consume(PaymentReceivedEvent event) {
-		Invoice invoice = new Invoice();
-		invoice.setCardHolder(event.getCardHolder());
-		invoice.setTotalPrice(event.getTotalPrice());
-		invoiceService.createInvoice(invoice);
-		
+		invoiceService.add(event);
 	}
 }

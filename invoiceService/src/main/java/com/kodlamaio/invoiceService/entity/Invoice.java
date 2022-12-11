@@ -21,14 +21,14 @@ public class Invoice {
     private String id;
     @Column(name = "car_id")
     private String carId;
+    @Column(name = "brandName")
+    private String brandName;
+    @Column(name = "modelName")
+    private String modelName;
+    @Column(name = "modelYear")
+    private int modelYear;
     @Column(name = "cardHolder")
     private String cardHolder;
-    @Column(name = "model_name")
-    private String modelName;
-    @Column(name = "brand_name")
-    private String brandName;
-    @Column(name = "model_year")
-    private int modelYear;
     @Column(name = "daily_price")
     private double dailyPrice;
     @Column(name = "total_price")
